@@ -6,6 +6,8 @@ import Board from "./Board";
 export default function Game() {
     const [history, setHistory] = useState([Array(9).fill(null)]);
     const [currentMove, setCurrentMove] = useState(0);
+    const [isSortAscending, setIsSortAscending] = useState(false);
+
     const currentSquares: Array<string | null> = history[currentMove];
     const xIsNext = currentMove % 2 == 0;
 

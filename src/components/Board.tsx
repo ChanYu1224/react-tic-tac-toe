@@ -35,12 +35,9 @@ type BoardProps = {
 
 export default function Board({xIsNext, squares, onPlay}: BoardProps) {
     function handleClick(i: number) {
-        if (squares[i] || calculateWinner(squares)) {
-            return;
-        }
+        if (squares[i] || calculateWinner(squares)) return;
 
         const nextSquares = squares.slice();
-
         if(xIsNext) {
             nextSquares[i] = "X";
         } else {
@@ -57,20 +54,14 @@ export default function Board({xIsNext, squares, onPlay}: BoardProps) {
     } else {
         status = "NextPlayer: " + (xIsNext ? "X" : "O")
     }
-
+    
+    // boardの動的生成
     const boardElement = Array(3).fill(Array(3).fill(0)).map((row: Array<number>, rowIndex: number) => {
         const rowElement = row.map((col: number, colIndex: number): ReactNode => {
             const index = rowIndex * 3 + colIndex;
-            return (
-                <Square value={squares[index]} onSquareClick={() => handleClick(index)} />
-            )
+            return <Square value={squares[index]} onSquareClick={() => handleClick(index)} />;
         })
-
-        return (
-            <div className="board-row">
-                {rowElement}
-            </div>
-        );
+        return <div className="board-row">{rowElement}</div>;
     })
 
     return (

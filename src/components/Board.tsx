@@ -41,7 +41,7 @@ function calculateWinner(squares): {
 type BoardProps = {
     xIsNext: boolean,
     squares: Array<string | null>,
-    onPlay: (nextSquares: Array<string | null>) => void,
+    onPlay: (nextSquares: Array<string>, position: number) => void,
 };
 
 export default function Board({xIsNext, squares, onPlay}: BoardProps) {
@@ -56,7 +56,7 @@ export default function Board({xIsNext, squares, onPlay}: BoardProps) {
             nextSquares[i] = "O";
         }
 
-        onPlay(nextSquares);
+        onPlay(nextSquares, i);
     };
 
     const { winner, line } = calculateWinner(squares);

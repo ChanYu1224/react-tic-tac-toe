@@ -5,15 +5,18 @@ import Board from "./Board";
 
 export default function Game() {
     const [history, setHistory] = useState([Array(9).fill(null)]);
+    const [positionHistory, setPositionHistory] = useState([null]);
     const [currentMove, setCurrentMove] = useState(0);
     const [isSortAscending, setIsSortAscending] = useState(false);
 
     const currentSquares: Array<string | null> = history[currentMove];
     const xIsNext = currentMove % 2 == 0;
 
-    function handlePlay(nextSquares: Array<string | null>) {
+    function handlePlay(nextSquares: Array<string | null>, nextPosition: number) {
         const nextHistory = [...history.slice(0, currentMove + 1), nextSquares];
+        const nextPositionHistory = [...positionHistory.slice(0, currentMove + 1), nextPosition]
         setHistory(nextHistory);
+        setPositionHistory(nextPositionHistory);
         setCurrentMove(nextHistory.length - 1);
     }
 
@@ -31,12 +34,15 @@ export default function Game() {
 
     // 過去の手の一覧
     const moves = history.map((squares, move) => {
-        let description;
+        let description: string;
+
+        const row: number = positionHistory[move] % 3 + 1;
+        const col: number = Math.floor(positionHistory[move] / 3) + 1;
 
         if (move === currentMove) {
-            description = "You are at move #" + move;
+            description = `You are at move #${move}`;
         } else if (move > 0) {
-            description = "Go to move #" + move;
+            description = `Go to move #${move} (${row}, ${col})`;
         } else {
             description = "Go to game start";
         }

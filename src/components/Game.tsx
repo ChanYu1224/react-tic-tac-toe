@@ -17,10 +17,19 @@ export default function Game() {
         setCurrentMove(nextHistory.length - 1);
     }
 
+    function calcSortButtonMessage() {
+        return isSortAscending ? "Sort to Descend" : " Sort to Ascend";
+    }
+
+    function handleSortButton() {
+        setIsSortAscending(!isSortAscending);
+    }
+
     function jumpTo(nextMove) {
         setCurrentMove(nextMove);
     }
 
+    // 過去の手の一覧
     const moves = history.map((squares, move) => {
         let description;
 
@@ -47,13 +56,26 @@ export default function Game() {
         }
     });
 
+    // 昇順と降順の制御
+    let movesList;
+    if (isSortAscending) {
+        movesList = (
+            <ol reversed>{moves.reverse()}</ol>
+        );
+    } else {
+        movesList = (
+            <ol>{moves}</ol>
+        )
+    }
+
     return (
         <div className="game">
             <div className="game-board">
                 <Board xIsNext={xIsNext} squares={currentSquares} onPlay={handlePlay} />
             </div>
             <div className="game-info">
-                <ol>{moves}</ol>
+                <button onClick={handleSortButton}>{calcSortButtonMessage()}</button>
+                {movesList}
             </div>
         </div>
     );

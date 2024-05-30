@@ -36,8 +36,8 @@ export default function Game() {
     const moves = history.map((squares, move) => {
         let description: string;
 
-        const row: number = positionHistory[move] % 3 + 1;
-        const col: number = Math.floor(positionHistory[move] / 3) + 1;
+        const row: number = Math.floor(positionHistory[move] / 3) + 1;
+        const col: number = positionHistory[move] % 3 + 1;
 
         if (move === currentMove) {
             description = `You are at move #${move}`;

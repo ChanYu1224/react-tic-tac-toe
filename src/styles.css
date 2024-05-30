@@ -71,6 +71,14 @@
     text-align: center;
     width: 34px;
   }
+
+  .square-highlight {
+    background-color: rgb(251, 190, 190);
+  }
+
+  .square:hover {
+    filter: brightness(90%);
+  }
   
   .board-row:after {
     clear: both;

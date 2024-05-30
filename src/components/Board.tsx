@@ -4,7 +4,10 @@ import Square from "./Square";
 
 
 
-function calculateWinner(squares) {
+function calculateWinner(squares): {
+    winner: string | null,
+    line: Array<number> | null,
+} {
     const lines = [
         [0, 1, 2],
         [3, 4, 5],
@@ -16,14 +19,22 @@ function calculateWinner(squares) {
         [2, 4, 6],
     ];
 
+    // 勝敗判定
     for (let i = 0; i < lines.length; i++) {
         const [a, b, c] = lines[i];
         if (squares[a] && squares[a] === squares[b] && squares[a] === squares[c]) {
-            return squares[a];
+            return {
+                winner: squares[a],
+                line: lines[i],
+            };
         }
     }
 
-    return null;
+    // 勝負が確定しなければnullを返す
+    return {
+        winner: null,
+        line: null,
+    };
 }
 
 
@@ -35,7 +46,8 @@ type BoardProps = {
 
 export default function Board({xIsNext, squares, onPlay}: BoardProps) {
     function handleClick(i: number) {
-        if (squares[i] || calculateWinner(squares)) return;
+        const { winner } = calculateWinner(squares);
+        if (squares[i] || winner) return;
 
         const nextSquares = squares.slice();
         if(xIsNext) {
@@ -47,26 +59,41 @@ export default function Board({xIsNext, squares, onPlay}: BoardProps) {
         onPlay(nextSquares);
     };
 
-    const winner = calculateWinner(squares);
-    let status;
+    const { winner, line } = calculateWinner(squares);
+    // winnerの反映
+    let statusMessage;
     if (winner) {
-        status = "Winner: "+ winner;
+        statusMessage = "Winner: "+ winner;
+
     } else {
-        status = "NextPlayer: " + (xIsNext ? "X" : "O")
+        statusMessage = "NextPlayer: " + (xIsNext ? "X" : "O")
+    }
+
+    // highlightマップ
+    const isHighlighted = Array(9).fill(false);
+    if (line) {
+        for( const index of line ) {
+            isHighlighted[index] = true;
+        }
     }
     
     // boardの動的生成
     const boardElement = Array(3).fill(Array(3).fill(0)).map((row: Array<number>, rowIndex: number) => {
         const rowElement = row.map((col: number, colIndex: number): ReactNode => {
             const index = rowIndex * 3 + colIndex;
-            return <Square value={squares[index]} onSquareClick={() => handleClick(index)} />;
+            return <Square
+                key={index}
+                value={squares[index]}
+                onSquareClick={() => handleClick(index)}
+                isHighlighted={isHighlighted[index]}
+            />;
         })
-        return <div className="board-row">{rowElement}</div>;
+        return <div key={rowIndex} className="board-row">{rowElement}</div>;
     })
 
     return (
         <>
-            <div className="status">{status}</div>
+            <div className="status">{statusMessage}</div>
             {boardElement}
         </>
     )
